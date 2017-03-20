@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="37">
+    <author>Team FSI Modding</author>
+    <version>1.0.0</version>
+    <title>
+        <en>Helpers</en>
+    </title>
+    <description>
+        <en>Here are the helpers made and used by the Team FSI Modding.</en>
+    </description>
+    <iconFilename>icon.dds</iconFilename>
+    <multiplayer supported="true" />
+    <extraSourceFiles>
+        <sourceFile filename="script.lua" />
+    </extraSourceFiles>
+</modDesc>
