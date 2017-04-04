@@ -22,8 +22,8 @@ function Helpers:initialize(missionInfo, missionDynamicInfo, loadingScreen)
     -- Instance of the fade effect object
     self.fadeEffect = FadeEffect:new({position = {x = 0.5, y = 0.5}, size = 0.03, shadow = true, shadowPosition = {x = 0.0025, y = 0.0035}, statesTime = {1, 2, 1}});
     -- Instance of HUDs
-    self.hudBGX = 0;
-    self.hudBGY = 0;
+    self.hudBGX = 0.5;
+    self.hudBGY = 0.5;
     self.hudBG = HUD:new("HUDBackground", g_baseUIFilename, hudBGX, hudBGY, 225, 125);
     self.hudBG:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER);
     self.hudBG:setUVs(g_colorBgUVs);
@@ -106,20 +106,27 @@ end
 function Helpers:update(dt)
     -- Update of the fade effect object
     self.fadeEffect:update(dt);
+    -- Update of HUDs
+    self.hudBGX = self.hudBGX + (math.random(0, 20) - 10) / 10000;
+    self.hudBGY = self.hudBGY + (math.random(0, 20) - 10) / 10000;
+    if self.hudBGX > 1 then
+        self.hudBGX = 0;
+    end
+    if self.hudBGX < 0 then
+        self.hudBGX = 1;
+    end
+    if self.hudBGY > 1 then
+        self.hudBGY = 0;
+    end
+    if self.hudBGY < 0 then
+        self.hudBGY = 1;
+    end
+    self.hudBG:setPosition(self.hudBGX, self.hudBGY);
 end
 
 function Helpers:draw()
     -- Draw of the fade effect object
     self.fadeEffect:draw();
-    -- Draw of HUDs
-    self.hudBGX = self.hudBGX + 0.001;
-    self.hudBGY = self.hudBGY + 0.001;
-    if self.hudBGX > 1 then
-        self.hudBGX = 0;
-        self.hudBGY = 0;
-    end
-    self.hudBG:setPosition(self.hudBGX, self.hudBGY);
-    HUD.renderHuds()
 end
 
-addModEventListener(Helpers)
+addModEventListener(Helpers);

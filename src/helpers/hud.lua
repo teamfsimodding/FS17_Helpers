@@ -8,7 +8,7 @@ HUD.huds = {};
 local HUD_mt = Class(HUD);
 
 function HUD:print(...)
-    if Helpers ~= nil then
+    if HUD ~= nil then
         local args = {...};
         for i, v in ipairs(args) do
             if v then
@@ -134,8 +134,25 @@ function HUD:setImage(overlayFilename)
     self.overlay:setImage(overlayFilename)
 end
 
-function HUD.renderHuds()
-    for _, h in pairs(HUD.huds) do
+function HUD:loadMap(name)
+end
+
+function HUD:deleteMap()
+end
+
+function HUD:keyEvent(unicode, sym, modifier, isDown)
+end
+
+function HUD:mouseEvent(posX, posY, isDown, isUp, button)
+end
+
+function HUD:update(dt)
+end
+
+function HUD:draw()
+    for _, h in pairs(self.huds) do
         h:render();
     end
 end
+
+addModEventListener(HUD);
