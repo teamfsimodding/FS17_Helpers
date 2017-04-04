@@ -12,6 +12,7 @@
     <multiplayer supported="true" />
     <extraSourceFiles>
         <sourceFile filename="helpers/fadeEffect.lua" />
+        <sourceFile filename="helpers/hud.lua" />
         <sourceFile filename="script.lua" />
     </extraSourceFiles>
 </modDesc>
