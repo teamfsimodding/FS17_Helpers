@@ -7,7 +7,13 @@ HUD = {};
 HUD.CALLBACKS_MOUSE_ENTER = 1;
 HUD.CALLBACKS_MOUSE_LEAVE = 2;
 HUD.CALLBACKS_MOUSE_DOWN = 3;
+HUD.CALLBACKS_MOUSE_UP = 4;
 HUD.CALLBACKS_MOUSE_CLICK = 5;
+HUD.MOUSEBUTTONS_LEFT = 1;
+HUD.MOUSEBUTTONS_WHEEL = 2;
+HUD.MOUSEBUTTONS_RIGHT = 3;
+HUD.MOUSEBUTTONS_WHEEL_UP = 4;
+HUD.MOUSEBUTTONS_WHEEL_DOWN = 5;
 local HUD_mt = Class(HUD);
 
 function HUD:print(...)
@@ -36,12 +42,8 @@ function HUD:new(name, overlayFilename, x, y, width, height, parent)
     self.width, self.height = getNormalizedScreenValues(width * self.uiScale, height * self.uiScale);
     self.overlay = Overlay:new(self.name, overlayFilename, x, y, self.width, self.height);
     self.callbacks = {};
-    self.callbacks.mouseEnter = {};
-    self.callbacks.mouseLeave = {};
-    self.leaveRised = true;
-    self.callbacks.mouseDown = {};
-    self.callbacks.mouseUp = {};
-    self.callbacks.mouseClick = {};
+    self.leaveRaised = true;
+    self.wasUp = true;
     self.childs = {};
     self.parent = parent;
     if self.parent ~= nil then
@@ -52,69 +54,52 @@ function HUD:new(name, overlayFilename, x, y, width, height, parent)
 end
 
 function HUD:mouseEvent(posX, posY, isDown, isUp, button)
-    if self.parent == nil then
         local x, y = self:getRenderPosition();
         local w, h = self:getRenderDimension();
         if posX >= x and posX <= x + w and posY >= y and posY <= y + h then
-            --self:print(string.format("posX:%s, posY:%s, isDown:%s, isUp:%s, button:%s", posX, posY, isDown, isUp, button));
-            if not self.enterRised then
-                self.leaveRised = false;
-                self.enterRised = true;
+            if not self.enterRaised then
+                self.leaveRaised = false;
+                self.enterRaised = true;
                 self:callCallback(HUD.CALLBACKS_MOUSE_ENTER, posX, posY);
             end
+            if isDown then
+                self.clickRaised = false;
+                self.wasDown = true;
+                self.wasUp = false;
+            end
+            if isUp then
+                if not self.clickRaised then
+                    self.clickRaised = true
+                    self:callCallback(HUD.CALLBACKS_MOUSE_CLICK, posX, posY, button);
+                end
+                self.wasDown = false;
+                self.wasUp = true;
+            end
+            if self.wasUp then
+                self:callCallback(HUD.CALLBACKS_MOUSE_UP, posX, posY, button);
+            end
+            if self.wasDown then
+                self:callCallback(HUD.CALLBACKS_MOUSE_DOWN, posX, posY, button);
+            end
         else
-            if not self.leaveRised then
-                self.leaveRised = true;
-                self.enterRised = false;
+            if not self.leaveRaised then
+                self.leaveRaised = true;
+                self.enterRaised = false;
                 self:callCallback(HUD.CALLBACKS_MOUSE_LEAVE, posX, posY);
             end
         end
-    end
 end
 
 function HUD:addCallback(cb, type)
-    if type == HUD.CALLBACKS_MOUSE_ENTER then
-        table.insert(self.callbacks.mouseEnter, cb);
-        return true;
+    if self.callbacks[type] == nil then
+        self.callbacks[type] = {};
     end
-    if type == HUD.CALLBACKS_MOUSE_LEAVE then
-        table.insert(self.callbacks.mouseLeave, cb);
-        return true;
-    end
-    if type == HUD.CALLBACKS_MOUSE_DOWN then
-        table.insert(self.callbacks.mouseDown, cb);
-        return true;
-    end
-    if type == HUD.CALLBACKS_MOUSE_UP then
-        table.insert(self.callbacks.mouseUp, cb);
-        return true;
-    end
-    if type == HUD.CALLBACKS_MOUSE_CLICK then
-        table.insert(self.callbacks.mouseClick, cb);
-        return true;
-    end
-    return false;
+    table.insert(self.callbacks[type], cb);
 end
 
 function HUD:callCallback(type, ...)
-    local callbacks = nil;
-    if type == HUD.CALLBACKS_MOUSE_ENTER then
-        callbacks = self.callbacks.mouseEnter, cb;
-    end
-    if type == HUD.CALLBACKS_MOUSE_LEAVE then
-        callbacks = self.callbacks.mouseLeave, cb;
-    end
-    if type == HUD.CALLBACKS_MOUSE_DOWN then
-        callbacks = self.callbacks.mouseDown, cb;
-    end
-    if type == HUD.CALLBACKS_MOUSE_UP then
-        callbacks = self.callbacks.mouseUP, cb;
-    end
-    if type == HUD.CALLBACKS_MOUSE_CLICK then
-        callbacks = self.callbacks.mouseClick, cb;
-    end
-    if callbacks ~= nil then
-        for _, c in pairs(callbacks) do
+    if self.callbacks[type] ~= nil then
+        for _, c in pairs(self.callbacks[type]) do
             if c ~= nil then
                 c(self, ...);
             end

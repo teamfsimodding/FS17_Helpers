@@ -28,24 +28,27 @@ function Helpers:initialize(missionInfo, missionDynamicInfo, loadingScreen)
     self.hudBG:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER);
     self.hudBG:setUVs(g_colorBgUVs);
     self.hudBG:setColor(unpack(g_colorBg));
-    self.hudBG:addCallback(Helpers.onMouseEnter, HUD.CALLBACKS_MOUSE_ENTER);
-    self.hudBG:addCallback(Helpers.onMouseLeave, HUD.CALLBACKS_MOUSE_LEAVE);
-    self.hudSBG = HUD:new("HUDSecondaryBackground", g_baseUIFilename, 0.5, 0.5, 151, 51, self.hudBG);
+    self.hudSBG = HUD:new("HUDSecondaryBackground", g_baseUIFilename, 0.5, 0.5, 211, 111, self.hudBG);
     self.hudSBG:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER);
     self.hudSBG:setUVs(g_colorBgUVs);
     self.hudSBG:setColor(0.0075, 0.0075, 0.0075, 1);
-    --self.hudBox1 = HUD:new("HUDBox1", g_baseUIFilename, 0.018, 0.5, 65, 101, self.hudSBG);
-    --self.hudBox1:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_LEFT);
-    --self.hudBox1:setUVs(g_colorBgUVs);
-    --self.hudBox1:setColor(0.75, 0.0075, 0.0075, 1);
-    --self.hudBox2 = HUD:new("HUDBox2", g_baseUIFilename, 0.5, 0.5, 65, 101, self.hudSBG);
-    --self.hudBox2:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER);
-    --self.hudBox2:setUVs(g_colorBgUVs);
-    --self.hudBox2:setColor(0.0075, 0.75, 0.0075, 1);
-    --self.hudBox3 = HUD:new("HUDBox3", g_baseUIFilename, 0.982, 0.5, 65, 101, self.hudSBG);
-    --self.hudBox3:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_RIGHT);
-    --self.hudBox3:setUVs(g_colorBgUVs);
-    --self.hudBox3:setColor(0.0075, 0.75, 0.75, 1);
+    self.hudBox1 = HUD:new("HUDBox1", g_baseUIFilename, 0.018, 0.5, 65, 101, self.hudSBG);
+    self.hudBox1:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_LEFT);
+    self.hudBox1:setUVs(g_colorBgUVs);
+    self.hudBox1:setColor(0.75, 0.0075, 0.0075, 1);
+    self.hudBox1:addCallback(Helpers.onMouseEnter, HUD.CALLBACKS_MOUSE_ENTER);
+    self.hudBox1:addCallback(Helpers.onMouseLeave, HUD.CALLBACKS_MOUSE_LEAVE);
+    self.hudBox2 = HUD:new("HUDBox2", g_baseUIFilename, 0.5, 0.5, 65, 101, self.hudSBG);
+    self.hudBox2:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER);
+    self.hudBox2:setUVs(g_colorBgUVs);
+    self.hudBox2:setColor(0.0075, 0.75, 0.0075, 1);
+    self.hudBox2:addCallback(Helpers.onMouseClick, HUD.CALLBACKS_MOUSE_CLICK);
+    self.hudBox3 = HUD:new("HUDBox3", g_baseUIFilename, 0.982, 0.5, 65, 101, self.hudSBG);
+    self.hudBox3:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_RIGHT);
+    self.hudBox3:setUVs(g_colorBgUVs);
+    self.hudBox3:setColor(0.0075, 0.0075, 0.75, 1);
+    self.hudBox3:addCallback(Helpers.onMouseDown, HUD.CALLBACKS_MOUSE_DOWN);
+    self.hudBox3:addCallback(Helpers.onMouseUp, HUD.CALLBACKS_MOUSE_UP);
 end
 g_mpLoadingScreen.loadFunction = Utils.prependedFunction(g_mpLoadingScreen.loadFunction, Helpers.initialize);
 
@@ -133,12 +136,31 @@ end
 
 function Helpers:onMouseEnter(x, y)
     --self:print(string.format("onMouseEnter(x:%s, y:%s)", x, y));
-    self:setColor(0.0075, 0.0075, 0.0075, 1);
+    self:setColor(0.0075, 0.0075, 0.75, 1);
 end
 
 function Helpers:onMouseLeave(x, y)
     --self:print(string.format("onMouseLeave(x:%s, y:%s)", x, y));
-    self:setColor(unpack(g_colorBg));
+    self:setColor(0.75, 0.0075, 0.0075, 1);
+end
+
+function Helpers:onMouseDown(x, y, button)
+    --self:print(string.format("onMouseDown(x:%s, y:%s, button:%s)", x, y, button));
+    self:setColor(0.75, 0.0075, 0.0075, 1);
+end
+
+function Helpers:onMouseUp(x, y, button)
+    --self:print(string.format("onMouseUp(x:%s, y:%s, button:%s)", x, y, button));
+    self:setColor(0.0075, 0.0075, 0.75, 1);
+end
+
+function Helpers:onMouseClick(x, y, button)
+    --self:print(string.format("onMouseClick(x:%s, y:%s, button:%s)", x, y, button));
+    if self.overlay.visible then
+        self:setIsVisible(false);
+    else
+        self:setIsVisible(true);
+    end
 end
 
 addModEventListener(Helpers);
