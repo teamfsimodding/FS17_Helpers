@@ -24,27 +24,27 @@ function Helpers:initialize(missionInfo, missionDynamicInfo, loadingScreen)
     -- Instance of HUDs
     self.hudBGX = 0.5;
     self.hudBGY = 0.5;
-    self.hudBG = HUD:new("HUDBackground", g_baseUIFilename, hudBGX, hudBGY, 225, 125);
-    self.hudBG:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER);
+    self.hudBG = HUD:new("HUDBackground", g_baseUIFilename, self.hudBGX, self.hudBGY, 225, 125);
+    self.hudBG:setAlignment(HUD.ALIGNS_VERTICAL_MIDDLE, HUD.ALIGNS_HORIZONTAL_CENTER);
     self.hudBG:setUVs(g_colorBgUVs);
     self.hudBG:setColor(unpack(g_colorBg));
     self.hudSBG = HUD:new("HUDSecondaryBackground", g_baseUIFilename, 0.5, 0.5, 211, 111, self.hudBG);
-    self.hudSBG:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER);
+    self.hudSBG:setAlignment(HUD.ALIGNS_VERTICAL_MIDDLE, HUD.ALIGNS_HORIZONTAL_CENTER);
     self.hudSBG:setUVs(g_colorBgUVs);
     self.hudSBG:setColor(0.0075, 0.0075, 0.0075, 1);
     self.hudBox1 = HUD:new("HUDBox1", g_baseUIFilename, 0.018, 0.5, 65, 101, self.hudSBG);
-    self.hudBox1:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_LEFT);
+    self.hudBox1:setAlignment(HUD.ALIGNS_VERTICAL_MIDDLE, HUD.ALIGNS_HORIZONTAL_LEFT);
     self.hudBox1:setUVs(g_colorBgUVs);
     self.hudBox1:setColor(0.75, 0.0075, 0.0075, 1);
     self.hudBox1:addCallback(Helpers.onMouseEnter, HUD.CALLBACKS_MOUSE_ENTER);
     self.hudBox1:addCallback(Helpers.onMouseLeave, HUD.CALLBACKS_MOUSE_LEAVE);
     self.hudBox2 = HUD:new("HUDBox2", g_baseUIFilename, 0.5, 0.5, 65, 101, self.hudSBG);
-    self.hudBox2:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_CENTER);
+    self.hudBox2:setAlignment(HUD.ALIGNS_VERTICAL_MIDDLE, HUD.ALIGNS_HORIZONTAL_CENTER);
     self.hudBox2:setUVs(g_colorBgUVs);
     self.hudBox2:setColor(0.0075, 0.75, 0.0075, 1);
     self.hudBox2:addCallback(Helpers.onMouseClick, HUD.CALLBACKS_MOUSE_CLICK);
     self.hudBox3 = HUD:new("HUDBox3", g_baseUIFilename, 0.982, 0.5, 65, 101, self.hudSBG);
-    self.hudBox3:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE, Overlay.ALIGN_HORIZONTAL_RIGHT);
+    self.hudBox3:setAlignment(HUD.ALIGNS_VERTICAL_MIDDLE, HUD.ALIGNS_HORIZONTAL_RIGHT);
     self.hudBox3:setUVs(g_colorBgUVs);
     self.hudBox3:setColor(0.0075, 0.0075, 0.75, 1);
     self.hudBox3:addCallback(Helpers.onMouseDown, HUD.CALLBACKS_MOUSE_DOWN);
@@ -114,19 +114,19 @@ function Helpers:update(dt)
     -- Update of HUDs
     --self.hudBGX = self.hudBGX + (math.random(0, 20) - 10) / 10000;
     --self.hudBGY = self.hudBGY + (math.random(0, 20) - 10) / 10000;
-    if self.hudBGX > 1 then
-        self.hudBGX = 0;
-    end
-    if self.hudBGX < 0 then
-        self.hudBGX = 1;
-    end
-    if self.hudBGY > 1 then
-        self.hudBGY = 0;
-    end
-    if self.hudBGY < 0 then
-        self.hudBGY = 1;
-    end
-    self.hudBG:setPosition(self.hudBGX, self.hudBGY);
+    --if self.hudBGX > 1 then
+    --    self.hudBGX = 0;
+    --end
+    --if self.hudBGX < 0 then
+    --    self.hudBGX = 1;
+    --end
+    --if self.hudBGY > 1 then
+    --    self.hudBGY = 0;
+    --end
+    --if self.hudBGY < 0 then
+    --    self.hudBGY = 1;
+    --end
+    --self.hudBG:setPosition(self.hudBGX, self.hudBGY);
 end
 
 function Helpers:draw()
@@ -156,7 +156,7 @@ end
 
 function Helpers:onMouseClick(x, y, button)
     --self:print(string.format("onMouseClick(x:%s, y:%s, button:%s)", x, y, button));
-    if self.overlay.visible then
+    if self.visible then
         self:setIsVisible(false);
     else
         self:setIsVisible(true);
