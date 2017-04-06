@@ -41,7 +41,6 @@ function HudManager:update(dt)
     if not self.missionIsStarted then
         self.missionIsStarted = true;
     end
-    InputBinding.setShowMouseCursor(true);
     for _, h in pairs(self.huds) do
         if h.update ~= nil then
             h:update(dt);

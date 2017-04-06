@@ -113,6 +113,7 @@ function Helpers:mouseEvent(posX, posY, isDown, isUp, button)
 end
 
 function Helpers:update(dt)
+    InputBinding.setShowMouseCursor(true);
     -- Update of the fade effect object
     self.fadeEffect:update(dt);
 -- Update of Huds
