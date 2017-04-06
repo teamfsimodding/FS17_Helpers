@@ -36,22 +36,22 @@ function Helpers:initialize(missionInfo, missionDynamicInfo, loadingScreen)
     self.hudBox1:setAlignment(Hud.ALIGNS_VERTICAL_MIDDLE, Hud.ALIGNS_HORIZONTAL_LEFT);
     self.hudBox1:setUVs(g_colorBgUVs);
     self.hudBox1:setColor(0.75, 0.0075, 0.0075, 1);
-    self.hudBox1:addCallback(Helpers.onMouseEnter, Hud.CALLBACKS_MOUSE_ENTER);
-    self.hudBox1:addCallback(Helpers.onMouseLeave, Hud.CALLBACKS_MOUSE_LEAVE);
+    self.hudBox1:addCallback(self, Helpers.onMouseEnter, Hud.CALLBACKS_MOUSE_ENTER);
+    self.hudBox1:addCallback(self, Helpers.onMouseLeave, Hud.CALLBACKS_MOUSE_LEAVE);
     self.hudBox2 = HudImage:new("HudBox2", g_baseUIFilename, 0.5, 0.5, 65, 101, self.hudSBG);
     self.hudBox2:setAlignment(Hud.ALIGNS_VERTICAL_MIDDLE, Hud.ALIGNS_HORIZONTAL_CENTER);
     self.hudBox2:setUVs(g_colorBgUVs);
     self.hudBox2:setColor(0.0075, 0.75, 0.0075, 1);
-    self.hudBox2:addCallback(Helpers.onMouseClick, Hud.CALLBACKS_MOUSE_CLICK);
+    self.hudBox2:addCallback(self, Helpers.onMouseClick, Hud.CALLBACKS_MOUSE_CLICK);
     self.hudBox3 = HudImage:new("HudBox3", g_baseUIFilename, 0.982, 0.5, 65, 101, self.hudSBG);
     self.hudBox3:setAlignment(Hud.ALIGNS_VERTICAL_MIDDLE, Hud.ALIGNS_HORIZONTAL_RIGHT);
     self.hudBox3:setUVs(g_colorBgUVs);
     self.hudBox3:setColor(0.0075, 0.0075, 0.75, 1);
-    self.hudBox3:addCallback(Helpers.onMouseDown, Hud.CALLBACKS_MOUSE_DOWN);
-    self.hudBox3:addCallback(Helpers.onMouseUp, Hud.CALLBACKS_MOUSE_UP);
+    self.hudBox3:addCallback(self, Helpers.onMouseDown, Hud.CALLBACKS_MOUSE_DOWN);
+    self.hudBox3:addCallback(self, Helpers.onMouseUp, Hud.CALLBACKS_MOUSE_UP);
     self.hudText1 = HudText:new("HudBox2", "Count: 0", 10, 0.5, 0.5, self.hudBox1);
     self.hudText1:setAlignment(Hud.ALIGNS_VERTICAL_MIDDLE, Hud.ALIGNS_HORIZONTAL_CENTER);
-    self.hudText1:addCallback(Helpers.onMouseClickText, Hud.CALLBACKS_MOUSE_CLICK);
+    self.hudText1:addCallback(self, Helpers.onMouseClickText, Hud.CALLBACKS_MOUSE_CLICK);
     self.hudText1.count = 0;
 end
 g_mpLoadingScreen.loadFunction = Utils.prependedFunction(g_mpLoadingScreen.loadFunction, Helpers.initialize);
@@ -139,44 +139,44 @@ function Helpers:draw()
     self.fadeEffect:draw();
 end
 
-function Helpers:onMouseEnter(x, y)
-    --self:print(string.format("onMouseEnter(x:%s, y:%s)", x, y));
-    self:setColor(0.0075, 0.0075, 0.75, 1);
+function Helpers:onMouseEnter(hud, x, y)
+    --hud:print(string.format("onMouseEnter(x:%s, y:%s)", x, y));
+    hud:setColor(0.0075, 0.0075, 0.75, 1);
 end
 
-function Helpers:onMouseLeave(x, y)
-    --self:print(string.format("onMouseLeave(x:%s, y:%s)", x, y));
-    self:setColor(0.75, 0.0075, 0.0075, 1);
+function Helpers:onMouseLeave(hud, x, y)
+    --hud:print(string.format("onMouseLeave(x:%s, y:%s)", x, y));
+    hud:setColor(0.75, 0.0075, 0.0075, 1);
 end
 
-function Helpers:onMouseDown(x, y, button)
-    --self:print(string.format("onMouseDown(x:%s, y:%s, button:%s)", x, y, button));
-    self:setColor(0.75, 0.0075, 0.0075, 1);
+function Helpers:onMouseDown(hud, x, y, button)
+    --hud:print(string.format("onMouseDown(x:%s, y:%s, button:%s)", x, y, button));
+    hud:setColor(0.75, 0.0075, 0.0075, 1);
 end
 
-function Helpers:onMouseUp(x, y, button)
-    --self:print(string.format("onMouseUp(x:%s, y:%s, button:%s)", x, y, button));
-    self:setColor(0.0075, 0.0075, 0.75, 1);
+function Helpers:onMouseUp(hud, x, y, button)
+    --hud:print(string.format("onMouseUp(x:%s, y:%s, button:%s)", x, y, button));
+    hud:setColor(0.0075, 0.0075, 0.75, 1);
 end
 
-function Helpers:onMouseClick(x, y, button)
-    --self:print(string.format("onMouseClick(x:%s, y:%s, button:%s)", x, y, button));
-    if self.visible then
-        self:setIsVisible(false);
+function Helpers:onMouseClick(hud, x, y, button)
+    --hud:print(string.format("onMouseClick(x:%s, y:%s, button:%s)", x, y, button));
+    if hud.visible then
+        hud:setIsVisible(false);
     else
-        self:setIsVisible(true);
+        hud:setIsVisible(true);
     end
 end
 
-function Helpers:onMouseClickText(x, y, button)
-    --self:print(string.format("onMouseClick(x:%s, y:%s, button:%s)", x, y, button));
+function Helpers:onMouseClickText(hud, x, y, button)
+    --hud:print(string.format("onMouseClick(x:%s, y:%s, button:%s)", x, y, button));
     if button == Hud.MOUSEBUTTONS_WHEEL_UP then
-        self.count = self.count + 1;
-        self:setText("Count: " .. self.count);
+        hud.count = hud.count + 1;
+        hud:setText("Count: " .. hud.count);
     end
     if button == Hud.MOUSEBUTTONS_WHEEL_DOWN then
-        self.count = self.count - 1;
-        self:setText("Count: " .. self.count);
+        hud.count = hud.count - 1;
+        hud:setText("Count: " .. hud.count);
     end
 end
 

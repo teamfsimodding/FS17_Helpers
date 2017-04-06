@@ -200,18 +200,18 @@ function Hud:mouseEvent(posX, posY, isDown, isUp, button)
     end
 end
 
-function Hud:addCallback(cb, type)
+function Hud:addCallback(obj, cb, type)
     if self.callbacks[type] == nil then
         self.callbacks[type] = {};
     end
-    table.insert(self.callbacks[type], cb);
+    table.insert(self.callbacks[type], {object = obj, callback = cb});
 end
 
 function Hud:callCallback(type, ...)
     if self.callbacks[type] ~= nil then
         for _, c in pairs(self.callbacks[type]) do
             if c ~= nil then
-                c(self, ...);
+                c.callback(c.object, self, ...);
             end
         end
     end
