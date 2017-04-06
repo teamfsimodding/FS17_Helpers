@@ -18,7 +18,7 @@ function HudText:new(name, text, size, x, y, parent, custom_mt)
 end
 
 function HudText:render()
-    if self.visible and self.overlayId ~= 0 then
+    if self.visible then
         local x, y = self:getRenderPosition();
         setTextColor(self.r, self.g, self.b, self.a);
         renderText(x, y, self.size, self.text);
