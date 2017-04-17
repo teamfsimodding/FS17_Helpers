@@ -29,11 +29,9 @@ Hud.ALIGNS_HORIZONTAL_RIGHT = 6;
 Hud.DEFAULT_UVS = {0, 0, 0, 1, 1, 0, 1, 1};
 
 function Hud:print(text, ...)
-    if Helpers ~= nil then
-        local start = string.format("[%s(%s)] -> ", self.name, getDate("%H:%M:%S"));
-        local ptext = string.format(text, ...);
-        print(string.format("%s%s", start, ptext));
-    end
+    local start = string.format("[%s(%s)] -> ", self.name, getDate("%H:%M:%S"));
+    local ptext = string.format(text, ...);
+    print(string.format("%s%s", start, ptext));
 end
 
 function Hud:new(name, x, y, width, height, parent, custom_mt)
