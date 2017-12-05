@@ -6,13 +6,8 @@
 HudProgressBar = {};
 local HudProgressBar_mt = Class(HudProgressBar, Hud);
 
-function HudProgressBar:new(name, overlayFilename, uvsBg, uvsMarker, bgColor, valueColor, markerSize, x, y, width, height, parent, custom_mt)
-    if custom_mt == nil then
-        custom_mt = HudProgressBar_mt;
-    end
-    self.uiScale = g_gameSettings:getValue("uiScale");
-    width, height = getNormalizedScreenValues(width * self.uiScale, height * self.uiScale);
-    local self = Hud:new(name, x, y, width, height, parent, custom_mt);
+function HudProgressBar:new(name, overlayFilename, uvsBg, uvsMarker, bgColor, valueColor, markerSize, x, y, width, height, parent, mt)
+    local self = Hud:new(name, x, y, width, height, parent, mt or HudProgressBar_mt);
     self.filename = overlayFilename;
     if self.filename ~= nil then
         self.progressBar = StatusBar:new(self.filename, uvsBg, uvsMarker, bgColor, valueColor, markerSize, self.x, self.y, self.width, self.height);

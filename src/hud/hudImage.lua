@@ -6,13 +6,8 @@
 HudImage = {};
 local HudImage_mt = Class(HudImage, Hud);
 
-function HudImage:new(name, overlayFilename, x, y, width, height, parent, custom_mt)
-    if custom_mt == nil then
-        custom_mt = HudImage_mt;
-    end
-    self.uiScale = g_gameSettings:getValue("uiScale");
-    width, height = getNormalizedScreenValues(width * self.uiScale, height * self.uiScale);
-    local self = Hud:new(name, x, y, width, height, parent, custom_mt);
+function HudImage:new(name, overlayFilename, x, y, width, height, parent, mt)
+    local self = Hud:new(name, x, y, width, height, parent, mt or HudImage_mt);
     self.filename = overlayFilename;
     self.overlayId = 0;
     if self.filename ~= nil then

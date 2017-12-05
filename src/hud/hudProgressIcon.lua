@@ -6,13 +6,8 @@
 HudProgressIcon = {};
 local HudProgressIcon_mt = Class(HudProgressIcon, Hud);
 
-function HudProgressIcon:new(name, overlayFilename, x, y, width, height, parent, custom_mt)
-    if custom_mt == nil then
-        custom_mt = HudProgressIcon_mt;
-    end
-    self.uiScale = g_gameSettings:getValue("uiScale");
-    width, height = getNormalizedScreenValues(width * self.uiScale, height * self.uiScale);
-    local self = Hud:new(name, x, y, width, height, parent, custom_mt);
+function HudProgressIcon:new(name, overlayFilename, x, y, width, height, parent, mt)
+    local self = Hud:new(name, x, y, width, height, parent, mt or HudProgressIcon_mt);
     self.filename = overlayFilename;
     self.bgOverlayId = 0;
     self.fgOverlayId = 0;

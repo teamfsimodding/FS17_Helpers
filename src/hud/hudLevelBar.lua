@@ -6,11 +6,8 @@
 HudLevelBar = {};
 local HudLevelBar_mt = Class(HudLevelBar, HudProgressBar);
 
-function HudLevelBar:new(name, overlayFilename, uvsBg, uvsMarker, bgColor, valueColor, markerSize, x, y, width, height, parent, custom_mt)
-    if custom_mt == nil then
-        custom_mt = HudLevelBar_mt;
-    end
-    local self = HudProgressBar:new(name, overlayFilename, uvsBg, uvsMarker, bgColor, valueColor, markerSize, x, y, width, height, parent, custom_mt);
+function HudLevelBar:new(name, overlayFilename, uvsBg, uvsMarker, bgColor, valueColor, markerSize, x, y, width, height, parent, mt)
+    local self = HudProgressBar:new(name, overlayFilename, uvsBg, uvsMarker, bgColor, valueColor, markerSize, x, y, width, height, parent, mt or HudLevelBar_mt);
     self.textColor = {1, 1, 1, 1};
     self.unitTextColor = {1, 1, 1, 1};
     self.text = "???";

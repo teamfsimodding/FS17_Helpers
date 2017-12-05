@@ -11,6 +11,7 @@ Hud.CALLBACKS_MOUSE_LEAVE = 2;
 Hud.CALLBACKS_MOUSE_DOWN = 3;
 Hud.CALLBACKS_MOUSE_UP = 4;
 Hud.CALLBACKS_MOUSE_CLICK = 5;
+Hud.CALLBACKS_SHOW_GUI = 6;
 
 Hud.MOUSEBUTTONS_LEFT = 1;
 Hud.MOUSEBUTTONS_WHEEL = 2;
@@ -34,14 +35,13 @@ function Hud:print(text, ...)
     print(string.format("%s%s", start, ptext));
 end
 
-function Hud:new(name, x, y, width, height, parent, custom_mt)
-    if custom_mt == nil then
-        custom_mt = Hud_mt
-    end
-    local self = setmetatable({}, custom_mt);
-    self.name = name
-    self.width = width;
-    self.height = height;
+function Hud:new(name, x, y, width, height, parent, mt)
+    local self = setmetatable({}, mt or Hud_mt);
+    self.name = name;
+    self.uiScale = g_gameSettings:getValue("uiScale");
+    self.width, self.height = getNormalizedScreenValues(width * self.uiScale, height * self.uiScale);
+    self.pWidth = width;
+    self.pHeight = height;
     self.defaultWidth = self.width;
     self.defaultHeight = self.height;
     self.x = x;
@@ -68,6 +68,14 @@ function Hud:new(name, x, y, width, height, parent, custom_mt)
     if self.parent ~= nil then
         table.insert(self.parent.childs, self);
     end
+    if self.x > 1 or self.x < 0 then
+        self.x = self:getNormalizedValues(x, 0)[1];
+        self:print("new x:%s", self.x);
+    end
+    if self.y > 1 or self.y < 0 then
+        self.y = self:getNormalizedValues(0, y)[2];
+        self:print("new y:%s", self.y);
+    end
     self.index, self.key = HudManager:addHud(self);
     return self;
 end
@@ -81,6 +89,9 @@ function Hud:delete(applyToChilds)
         end
     end
     HudManager:removeHudWithKey(self.key);
+end
+
+function Hud:update(dt)
 end
 
 function Hud:setColor(r, g, b, a)
@@ -162,6 +173,9 @@ function Hud:setIsVisible(visible, applyToChilds)
     end
 end
 
+function Hud:keyEvent(unicode, sym, modifier, isDown)
+end
+
 function Hud:mouseEvent(posX, posY, isDown, isUp, button)
     local x, y = self:getRenderPosition();
     local w, h = self:getRenderDimension();
@@ -199,6 +213,10 @@ function Hud:mouseEvent(posX, posY, isDown, isUp, button)
     end
 end
 
+function Hud:showGui(state, guiName, gui)
+    self:callCallback(Hud.CALLBACKS_SHOW_GUI, state, guiName, gui);
+end
+
 function Hud:addCallback(obj, cb, type)
     if self.callbacks[type] == nil then
         self.callbacks[type] = {};
@@ -213,5 +231,16 @@ function Hud:callCallback(type, ...)
                 c.callback(c.object, self, ...);
             end
         end
+    end
+end
+
+function Hud:getNormalizedValues(x, y)
+    if self.parent == nil then
+        local values = getNormalizedValues({x, y}, {g_referenceScreenWidth, g_referenceScreenHeight});
+        local newX = values[1] * g_aspectScaleX;
+        local newY = values[2] * g_aspectScaleY;
+        return {newX, newY};
+    else
+        return {(x / self.parent.pWidth), (y / self.parent.pHeight)};
     end
 end
