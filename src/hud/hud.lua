@@ -162,6 +162,9 @@ function Hud:setIsVisible(visible, applyToChilds)
 end
 
 function Hud:mouseEvent(posX, posY, isDown, isUp, button)
+    if not self.visible then
+        return;
+    end
     local x, y = self:getRenderPosition();
     local w, h = self:getRenderDimension();
     if posX >= x and posX <= x + w and posY >= y and posY <= y + h then

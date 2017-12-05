@@ -6,14 +6,15 @@
 HudText = {};
 local HudText_mt = Class(HudText, Hud);
 
-function HudText:new(name, text, size, x, y, parent, custom_mt)
+function HudText:new(name, text, size, x, y, bold, parent, custom_mt)
     if custom_mt == nil then
         custom_mt = HudText_mt;
     end
+    local self =  Hud:new(name, x, y, 0, 0, parent, custom_mt);
     self.uiScale = g_gameSettings:getValue("uiScale");
     self.text = text;
     self:setSize(size);
-    local self = Hud:new(name, x, y, self.width, self.height, parent, custom_mt);
+    self.bold = bold;
     return self;
 end
 
@@ -21,7 +22,9 @@ function HudText:render()
     if self.visible then
         local x, y = self:getRenderPosition();
         setTextColor(self.r, self.g, self.b, self.a);
+        setTextBold(self.bold);
         renderText(x, y, self.size, self.text);
+        setTextBold(false);
         setTextColor(1, 1, 1, 1);
     end
 end

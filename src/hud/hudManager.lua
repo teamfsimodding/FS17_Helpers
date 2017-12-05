@@ -49,7 +49,7 @@ function HudManager:update(dt)
 end
 
 function HudManager:draw()
-    if self.missionIsStarted then
+    if self.missionIsStarted and g_currentMission.showVehicleSchema then
         for _, h in pairs(self.huds) do
             if h.render ~= nil then
                 h:render();
@@ -60,6 +60,28 @@ end
 
 function HudManager:addHud(hud)
     table.insert(self.huds, hud);
+end
+
+function HudManager.lockVehicleCameras(vehicle)
+    if not vehicle.camerasAreLocked then
+        for _, c in pairs(vehicle.cameras) do
+            c.lastAllowTranslation = c.allowTranslation;
+            c.allowTranslation = false;
+            c.lastIsRotatable = c.isRotatable;
+            c.isRotatable = false;
+        end
+        vehicle.camerasAreLocked = true;
+    end
+end
+
+function HudManager.unlockVehicleCameras(vehicle)
+    if vehicle.camerasAreLocked then
+        for _, c in pairs(vehicle.cameras) do
+            c.allowTranslation = c.lastAllowTranslation;
+            c.isRotatable = c.lastIsRotatable;
+        end
+        vehicle.camerasAreLocked = false;
+    end
 end
 
 addModEventListener(HudManager);
