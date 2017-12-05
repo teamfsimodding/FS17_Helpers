@@ -70,11 +70,9 @@ function Hud:new(name, x, y, width, height, parent, mt)
     end
     if self.x > 1 or self.x < 0 then
         self.x = self:getNormalizedValues(x, 0)[1];
-        self:print("new x:%s", self.x);
     end
     if self.y > 1 or self.y < 0 then
         self.y = self:getNormalizedValues(0, y)[2];
-        self:print("new y:%s", self.y);
     end
     self.index, self.key = HudManager:addHud(self);
     return self;
@@ -95,10 +93,17 @@ function Hud:update(dt)
 end
 
 function Hud:setColor(r, g, b, a)
-    self.r = Utils.getNoNil(r, self.r);
-    self.g = Utils.getNoNil(g, self.g);
-    self.b = Utils.getNoNil(b, self.b);
-    self.a = Utils.getNoNil(a, self.a);
+    if type(r) == "table" then
+        self.r = Utils.getNoNil(r[1], self.r);
+        self.g = Utils.getNoNil(r[2], self.g);
+        self.b = Utils.getNoNil(r[3], self.b);
+        self.a = Utils.getNoNil(r[4], self.a);
+    else
+        self.r = Utils.getNoNil(r, self.r);
+        self.g = Utils.getNoNil(g, self.g);
+        self.b = Utils.getNoNil(b, self.b);
+        self.a = Utils.getNoNil(a, self.a);
+    end
     if applyToChilds then
         for _, c in pairs(self.childs) do
             c:setColor(self.r, self.g, self.b, self.a, applyToChilds);
