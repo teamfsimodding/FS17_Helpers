@@ -68,7 +68,7 @@ function Hud:new(name, x, y, width, height, parent, custom_mt)
     if self.parent ~= nil then
         table.insert(self.parent.childs, self);
     end
-    HudManager:addHud(self);
+    self.index, self.key = HudManager:addHud(self);
     return self;
 end
 
@@ -80,6 +80,7 @@ function Hud:delete(applyToChilds)
             c.parent = nil;
         end
     end
+    HudManager:removeHudWithKey(self.key);
 end
 
 function Hud:setColor(r, g, b, a)
@@ -162,9 +163,6 @@ function Hud:setIsVisible(visible, applyToChilds)
 end
 
 function Hud:mouseEvent(posX, posY, isDown, isUp, button)
-    if not self.visible then
-        return;
-    end
     local x, y = self:getRenderPosition();
     local w, h = self:getRenderDimension();
     if posX >= x and posX <= x + w and posY >= y and posY <= y + h then

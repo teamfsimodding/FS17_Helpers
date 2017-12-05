@@ -24,6 +24,7 @@ end
 function HudImage:delete(applyToChilds)
     if self.overlayId ~= 0 then
         delete(self.overlayId);
+        self.overlayId = 0;
     end
     HudImage:superClass().delete(self, applyToChilds);
 end
@@ -36,12 +37,14 @@ function HudImage:setColor(r, g, b, a, applyToChilds)
 end
 
 function HudImage:setUVs(uvs)
-    if self.overlayId ~= 0 then
+    if uvs ~= self.uvs then
         if type(uvs) == "number" then
             printCallstack();
         end
-        self.uvs = uvs;
-        setOverlayUVs(self.overlayId, unpack(self.uvs));
+        if self.overlayId ~= 0 then
+            self.uvs = uvs;
+            setOverlayUVs(self.overlayId, unpack(self.uvs));
+        end
     end
 end
 
