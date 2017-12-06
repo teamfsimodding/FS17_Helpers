@@ -93,7 +93,7 @@ end
 function Hud:update(dt)
 end
 
-function Hud:setColor(r, g, b, a, applyToChilds)
+function Hud:setColor(r, g, b, a)
     if type(r) == "table" then
         self.r = Utils.getNoNil(r[1], self.r);
         self.g = Utils.getNoNil(r[2], self.g);
@@ -105,12 +105,7 @@ function Hud:setColor(r, g, b, a, applyToChilds)
         self.b = Utils.getNoNil(b, self.b);
         self.a = Utils.getNoNil(a, self.a);
     end
-    if applyToChilds then
-        for _, c in pairs(self.childs) do
-            c:setColor(self.r, self.g, self.b, self.a, applyToChilds);
-        end
-    end
-    return r, g, b, a;
+    return self.r, self.g, self.b, self.a;
 end
 
 function Hud:setPosition(x, y)
