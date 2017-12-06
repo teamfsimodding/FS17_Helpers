@@ -8,7 +8,6 @@ local HudText_mt = Class(HudText, Hud);
 
 function HudText:new(name, text, size, x, y, bold, parent, mt)
     local self = Hud:new(name, x, y, 0, 0, parent, mt or HudText_mt);
-    self.uiScale = g_gameSettings:getValue("uiScale");
     self.text = text;
     self:setSize(size);
     self.bold = bold;
