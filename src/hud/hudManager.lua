@@ -11,11 +11,13 @@ HudManager.huds = {};
 HudManager.hudIndex = 0;
 HudManager.codeFolder = "hud";
 source(HudManager.modDir .. HudManager.codeFolder .. "/hud.lua", HudManager.modName);
+source(HudManager.modDir .. HudManager.codeFolder .. "/hudControl.lua", HudManager.modName);
 source(HudManager.modDir .. HudManager.codeFolder .. "/hudImage.lua", HudManager.modName);
 source(HudManager.modDir .. HudManager.codeFolder .. "/hudText.lua", HudManager.modName);
 source(HudManager.modDir .. HudManager.codeFolder .. "/hudProgressBar.lua", HudManager.modName);
 source(HudManager.modDir .. HudManager.codeFolder .. "/hudLevelBar.lua", HudManager.modName);
 source(HudManager.modDir .. HudManager.codeFolder .. "/hudProgressIcon.lua", HudManager.modName);
+source(HudManager.modDir .. HudManager.codeFolder .. "/hudControlButton.lua", HudManager.modName);
 
 function HudManager:loadMap(name)
     g_gui.showGui = Utils.overwrittenFunction(g_gui.showGui, self.showGui);
@@ -108,7 +110,17 @@ end
 
 function HudManager.setShowMouseCursor(state, vehicle)
     InputBinding.setShowMouseCursor(state);
-    HudManager.lockVehicleCameras(vehicle);
+    if vehicle ~= nil then
+        if vehicle.lockInput ~= nil then
+            vehicle:lockInput(state);
+        else
+            if state then
+                HudManager.lockVehicleCameras(vehicle);
+            else
+                HudManager.unlockVehicleCameras(vehicle);
+            end
+        end
+    end
 end
 
 addModEventListener(HudManager);
