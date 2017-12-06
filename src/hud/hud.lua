@@ -62,7 +62,8 @@ function Hud:new(name, x, y, width, height, parent, mt)
     self.uvs = Hud.DEFAULT_UVS;
     self.callbacks = {};
     self.leaveRaised = true;
-    self.wasUp = true;
+    self.upRaised = true;
+    self.downRaised = false;
     self.childs = {};
     self.parent = parent;
     if self.parent ~= nil then
@@ -92,7 +93,7 @@ end
 function Hud:update(dt)
 end
 
-function Hud:setColor(r, g, b, a)
+function Hud:setColor(r, g, b, a, applyToChilds)
     if type(r) == "table" then
         self.r = Utils.getNoNil(r[1], self.r);
         self.g = Utils.getNoNil(r[2], self.g);
@@ -109,6 +110,7 @@ function Hud:setColor(r, g, b, a)
             c:setColor(self.r, self.g, self.b, self.a, applyToChilds);
         end
     end
+    return r, g, b, a;
 end
 
 function Hud:setPosition(x, y)
@@ -192,22 +194,22 @@ function Hud:mouseEvent(posX, posY, isDown, isUp, button)
         end
         if isDown then
             self.clickRaised = false;
-            self.wasDown = true;
-            self.wasUp = false;
+            if self.upRaised then
+                self.upRaised = false;
+                self.downRaised = true;
+                self:callCallback(Hud.CALLBACKS_MOUSE_DOWN, posX, posY, button);
+            end
         end
         if isUp then
             if not self.clickRaised then
                 self.clickRaised = true
                 self:callCallback(Hud.CALLBACKS_MOUSE_CLICK, posX, posY, button);
             end
-            self.wasDown = false;
-            self.wasUp = true;
-        end
-        if self.wasUp then
-            self:callCallback(Hud.CALLBACKS_MOUSE_UP, posX, posY, button);
-        end
-        if self.wasDown then
-            self:callCallback(Hud.CALLBACKS_MOUSE_DOWN, posX, posY, button);
+            if self.downRaised then
+                self.upRaised = true;
+                self.downRaised = false;
+                self:callCallback(Hud.CALLBACKS_MOUSE_UP, posX, posY, button);
+            end
         end
     else
         if not self.leaveRaised then
