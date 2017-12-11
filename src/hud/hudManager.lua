@@ -18,6 +18,7 @@ source(HudManager.modDir .. HudManager.codeFolder .. "/hudProgressBar.lua", HudM
 source(HudManager.modDir .. HudManager.codeFolder .. "/hudLevelBar.lua", HudManager.modName);
 source(HudManager.modDir .. HudManager.codeFolder .. "/hudProgressIcon.lua", HudManager.modName);
 source(HudManager.modDir .. HudManager.codeFolder .. "/hudControlButton.lua", HudManager.modName);
+source(HudManager.modDir .. HudManager.codeFolder .. "/hudControlPaging.lua", HudManager.modName);
 
 function HudManager:loadMap(name)
     g_gui.showGui = Utils.overwrittenFunction(g_gui.showGui, self.showGui);

@@ -91,7 +91,6 @@ function HudControlButton:setColor(r, g, b, a, state)
 end
 
 function HudControlButton:callCallback(type, ...)
---self:print("Should call %s", type);
 end
 
 function HudControlButton:virtualCallCallback(type, ...)
