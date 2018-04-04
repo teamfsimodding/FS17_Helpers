@@ -17,14 +17,20 @@ function DelayedCallBack:new(callBack, callBackSelf)
     self.callBackCalled = true;
     self.delay = 0;
     self.delayCounter = 0;
+    self.skipOneFrame = false;
     return self;
 end
 
 function DelayedCallBack:update(dt)
     if not self.callBackCalled then
-        self.delayCounter = self.delayCounter + dt;
+        if not self.skipOneFrame then
+            self.delayCounter = self.delayCounter + dt;
+        end
         if self.delayCounter >= self.delay then
             self:callCallBack();
+        end
+        if self.skipOneFrame then
+            self.delayCounter = self.delayCounter + dt;
         end
     end
 end
